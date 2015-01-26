@@ -1,3 +1,4 @@
+
 //
 //  RSA_fun.cpp
 //  RSA
@@ -18,39 +19,48 @@ Intero RSA_decrypt(Intero message, Key Privkey)
     return modexp(message, Privkey.E, Privkey.N);
 }
 
-void RSA_Privkey_create(Key Pubkey,Key Prekey,Key &Privkey)
+
+
+bool E_check(Intero E, Intero Phi)
 {
-    Privkey.E = Inverse(Pubkey.E, Prekey.E);
-    Privkey.N = Pubkey.N;
+    return coprime(E,Phi) && (E-1!=Phi/4) && (E-1!=Phi/2);
 }
 
-
-
-
-
-
-void RSA_Pubkey_create(Key Prekey, Key &Pubkey)
+bool Q_check(Intero Q, Intero P)
 {
-    Pubkey.N = Prekey.N;
+    Intero dif = (P-Q);
+    dif.Abs();
+    P=(P-1)/2;
+    Q=(Q-1)/2;
+  
+    return coprime(P,Q) && (dif > Distance);
+}
+
+void RSA_key_create(Key &Pubkey, Key &Privkey)
+{
+    Randinit
+    Intero primeP= Primegen; //generates prime number for key mod
+    Intero primeQ= Primegen;
+    
+    while (!Q_check(primeQ,primeP)) //make sure it is appropriate for security standards
+    {
+        primeQ= Primegen;
+    }
+    
+    Intero Phi = (primeP-1) * (primeQ-1);
+    Intero N = primeP * primeQ; //Mod of key
     
     Intero E = RandNum;
-    E = E % Prekey.E;
-
+    E = E % N;//exponent of public key
     
-    while (!coprime(E, Prekey.E))
+    
+    while (!E_check(E, Phi)) //make sure it is appropriate for security standards
     {
         E++;
     }
     Pubkey.E = E;
-}
-
-void RSA_Prekey_create(Key &Prekey)
-{
-    Intero primeP= Primegen;
-    Intero primeQ= Primegen;
+    Pubkey.N = N;
     
-    Prekey.E = (primeP-1) * (primeQ-1);
-    Prekey.N = primeP * primeQ;
+    Privkey.E = inverso(E, Phi); //exponet of private key
+    Privkey.N = N;
 }
-
-

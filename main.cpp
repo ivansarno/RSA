@@ -12,31 +12,35 @@
 
 int main(int argc, const char * argv[])
 {
-    srand(time(NULL));
     
-    Key Pubkey, Prekey, Privkey;
-
-    RSA_Prekey_create(Prekey);
+    Randinit
+    Key Pubkey,Privkey;
     
-    RSA_Pubkey_create(Prekey, Pubkey);
+    RSA_key_create(Pubkey, Privkey);
     
-    std::cout << Pubkey.E << "\n";
+    Intero m = RandNum;
     
-    Intero c = RSA_encrypt(3477,Pubkey);
+    std::cout << m << "\n";
+    
+    
+    
+    Intero c = RSA_encrypt(m,Pubkey);
     
     std::cout << c << "\n";
     
-   RSA_Privkey_create(Pubkey, Prekey, Privkey);
     
-    std::cout << Privkey.E << "\n";
+   // std::cout << Privkey.E << "\n";
     
-    std::cout << RSA_decrypt(c,Privkey) << "\n";
+    Intero ris = RSA_decrypt(c,Privkey);
+    
+    std::cout << ris << "\n";
     
    // int t;
     
    // std::cin >> t;
     
    // std::cout << MRtest(t) << "\n";
+    
     
     return 0;
 }
