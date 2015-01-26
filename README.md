@@ -3,15 +3,18 @@ RSA C++ implementation
 
 Beta version
 
-algorithm fully functional, but random number generator not sure and generate only 32 bit number (you can replace it in Define.h), key generation is not controlled with security parameters
-
-Main file in for test
+Main file is for test
 
 Usage
 
-The library includes function to encrypt, decrypt and key generation, instruction in RSA_fun.h file
+The library includes function to encrypt, decrypt, key generation and Key struct, instruction in RSA_fun.h file
 
-Size of block and precision of primality test are settable in Define.h file
+Size of block, precision of primality test and other parameters are settable in Define.h file
+
+Random Number Generator
+
+Library not includes a Random Number Generator, user can replace it with one of your own in Define.h file
+(compatible with integer library)
 
 
 Credit
