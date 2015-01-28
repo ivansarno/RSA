@@ -51,7 +51,7 @@ void RSA_key_create(Key &Pubkey, Key &Privkey)
     Intero N = primeP * primeQ; //Mod of key
     
     Intero E = RandNum;
-    E = E % N;//exponent of public key
+    E = E % N;//public key
     
     
     while (!E_check(E, Phi)) //make sure it is appropriate for security standards
@@ -61,6 +61,6 @@ void RSA_key_create(Key &Pubkey, Key &Privkey)
     Pubkey.E = E;
     Pubkey.N = N;
     
-    Privkey.E = inverso(E, Phi); //exponet of private key
+    Privkey.E = inverso(E, Phi); //private key
     Privkey.N = N;
 }

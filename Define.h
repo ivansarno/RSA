@@ -13,7 +13,7 @@
 #include <time.h>
 #include <stdlib.h>
 #include "ttmath/ttmath.h" //arbitrary precision library
-#include <assert.h>
+
 
 
 

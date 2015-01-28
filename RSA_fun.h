@@ -9,7 +9,6 @@
 #ifndef __RSA__RSA_fun__
 #define __RSA__RSA_fun__
 
-#include "Define.h"
 #include "aux_fun.h"
 
 typedef struct

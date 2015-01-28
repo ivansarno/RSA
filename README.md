@@ -1,8 +1,6 @@
 # RSA
 RSA C++ implementation
 
-Beta version
-
 Main file is for test
 
 Usage
