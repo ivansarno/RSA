@@ -1,8 +1,6 @@
 # RSA
 RSA C++ implementation
 
-Main file is for test
-
 Usage
 
 The library includes function to encrypt, decrypt, key generation and Key struct, instruction in RSA_fun.h file
