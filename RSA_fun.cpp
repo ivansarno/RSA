@@ -20,7 +20,7 @@ Intero RSA_decrypt(Intero message, Key Privkey)
 }
 
 
-
+//check the compliance with security standard
 bool E_check(Intero E, Intero Phi)
 {
     return coprime(E,Phi) && (E-1!=Phi/4) && (E-1!=Phi/2);

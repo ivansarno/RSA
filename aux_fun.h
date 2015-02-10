@@ -10,6 +10,7 @@
 #define __RSA__aux_fun__
 
 #include "Define.h"
+//#include <std>
 
 Intero fastexp( Intero base, Intero esp);
 Intero modexp( Intero base, Intero esp, Intero mod);

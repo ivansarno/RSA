@@ -26,6 +26,4 @@ bool E_check(Intero E, Intero Phi);
 bool Q_check(Intero Q, Intero P);
 
 
-
-
 #endif /* defined(__RSA__RSA_fun__) */

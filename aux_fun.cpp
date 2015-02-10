@@ -17,15 +17,30 @@ Intero fastexp( Intero base, Intero esp)
         return 1;
     if (esp == 1)
         return base;
-    else if (esp%2==0)
-    {
-        Intero temp = fastexp(base, esp/2);
-        return temp * temp;
-    }
     else
     {
-        Intero temp = fastexp(base, esp/2);
-        return temp * temp * base;
+        Intero i = 1;
+        int j = 0;
+        std::vector<Intero> tempris;
+        tempris.push_back(base);
+        while (i < esp)
+        {
+            tempris.push_back(tempris[j]*tempris[j]);
+            j++;
+            i *= 2;
+        }
+        Intero result = 1;
+        while (esp > 0)
+        {
+            if (esp - i >= 0)
+            {
+                result *= tempris[j];
+                esp -= i;
+            }
+            j--;
+            i /= 2;
+        }
+        return result;
     }
 }
 
@@ -35,15 +50,30 @@ Intero modexp( Intero base, Intero esp, Intero mod)
         return 1;
     if (esp == 1)
         return base;
-    else if (esp%2==0)
-    {
-        Intero temp = modexp(base, esp/2, mod);
-        return temp * temp % mod;
-    }
     else
     {
-        Intero temp = modexp(base, esp/2, mod);
-        return temp * temp * base % mod;
+        Intero i = 1;
+        int j = 0;
+        std::vector<Intero> tempris;
+        tempris.push_back(base);
+        while (i < esp)
+        {
+            tempris.push_back((tempris[j]*tempris[j]) % mod);
+            j++;
+            i *= 2;
+        }
+        Intero result = 1;
+        while (esp > 0)
+        {
+            if (esp - i >= 0)
+            {
+                result = (result * tempris[j]) % mod;
+                esp -= i;
+            }
+            j--;
+            i /= 2;
+        }
+        return result;
     }
 }
 
@@ -185,8 +215,6 @@ bool coprime (Intero a, Intero b)
         return true;
     else return false;
 }
-
-
 
 
 
