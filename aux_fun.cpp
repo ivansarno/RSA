@@ -5,76 +5,78 @@
 //  Created by ivan sarno on 22/01/15.
 //  Copyright (c) 2015 ivan sarno. All rights reserved.
 //
+// version V.1.5
 
 #include "aux_fun.h"
 
 
 
-
-Intero fastexp( Intero base, Intero esp)
+Intero fastexp(Intero base, Intero esp)
 {
-    if (esp==0)
-        return 1;
-    if (esp == 1)
-        return base;
-    else
-    {
-        Intero i = 1;
-        int j = 0;
-        std::vector<Intero> tempris;
-        tempris.push_back(base);
-        while (i < esp)
-        {
-            tempris.push_back(tempris[j]*tempris[j]);
-            j++;
-            i *= 2;
-        }
-        Intero result = 1;
-        while (esp > 0)
-        {
-            if (esp - i >= 0)
-            {
-                result *= tempris[j];
-                esp -= i;
-            }
-            j--;
-            i /= 2;
-        }
-        return result;
-    }
+	if (esp == 0)
+		return 1;
+	if (esp == 1)
+		return base;
+	else
+	{
+		Intero i = 1;
+		int j = 0;
+		Intero *tempris = new Intero[Block_size];
+		tempris[0] = base;
+		while (i < esp)
+		{
+			tempris[j+1] = tempris[j] * tempris[j];
+			j++;
+			i *= 2;
+		}
+		Intero result = 1;
+		while (esp > 0)
+		{
+			if (esp - i >= 0)
+			{
+				result *= tempris[j];
+				esp -= i;
+			}
+			j--;
+			i /= 2;
+		}
+        delete [] tempris;
+		return result;
+	}
 }
 
-Intero modexp( Intero base, Intero esp, Intero mod)
+Intero modexp(Intero base, Intero esp, Intero mod)
 {
-    if (esp==0)
-        return 1;
-    if (esp == 1)
-        return base;
-    else
-    {
-        Intero i = 1;
-        int j = 0;
-        std::vector<Intero> tempris;
-        tempris.push_back(base);
-        while (i < esp)
-        {
-            tempris.push_back((tempris[j]*tempris[j]) % mod);
-            j++;
-            i *= 2;
-        }
-        Intero result = 1;
-        while (esp > 0)
-        {
-            if (esp - i >= 0)
-            {
-                result = (result * tempris[j]) % mod;
-                esp -= i;
-            }
-            j--;
-            i /= 2;
-        }
-        return result;
-    }
+	if (esp == 0)
+		return 1;
+	if (esp == 1)
+		return base;
+	else
+	{
+		Intero i = 1;
+		int j = 0;
+		Intero *tempris = new Intero [Block_size];
+		tempris[0] = base;
+		while (i < esp)
+		{
+			tempris[j+1] = (tempris[j] * tempris[j]) % mod;
+			j++;
+			i *= 2;
+		}
+		Intero result = 1;
+		while (esp > 0)
+		{
+			if (esp - i >= 0)
+			{
+				result = (result * tempris[j]) % mod;
+				esp -= i;
+			}
+			j--;
+			i /= 2;
+		}
+        delete[] tempris;
+		return result;
+	}
 }
 
 bool MRpredicate1 (Intero y, Intero z, Intero N)
@@ -155,7 +157,7 @@ Intero Primegenerator()
     if (P%2==0)
         P++;
     
-    while (!MRtest(P))//test primality
+    while (!MRtest(P))//primality test
     {
         P = P+2;
     }
@@ -216,5 +218,17 @@ bool coprime (Intero a, Intero b)
     else return false;
 }
 
+//generates a string of random digit, isn't sure, for test only
+char *randstring()
+{
+	int size = (Block_size *3)/20 -1;
+	char * rs = new char[size + 1];
+	int i;
+	for (i = 0; i < size; i++)
+		rs[i] = (char) (rand() % 10 + 48);
+
+		rs[size] = '\0';
+		return rs;
+}
 
 
