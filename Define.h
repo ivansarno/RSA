@@ -16,7 +16,7 @@
 #include "ttmath/ttmath.h" //arbitrary precision library
 
 #define Block_size 512
-#define Intero ttmath::Int<16> //set int size of block: 64 for 1024 bit, 128 for 2048
+#define Intero ttmath::Int<16> //set int size of block: 64 for 1024 bit, 128 for 2048, x2 on Windows
 #define Primegen Primegenerator() //prime number generator
 #define Precision 15 //precision of Miller-Rabin test
 #define RandNum  randstring()      //rand() //random number generator
