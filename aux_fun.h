@@ -5,7 +5,7 @@
 //  Created by ivan sarno on 22/01/15.
 //  Copyright (c) 2015 ivan sarno. All rights reserved.
 //
-// version V.1.5
+// version V.2.0
 
 #ifndef __RSA__aux_fun__
 #define __RSA__aux_fun__

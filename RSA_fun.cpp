@@ -6,31 +6,35 @@
 //  Created by ivan sarno on 21/01/15.
 //
 //
-// version V.1.5
+// version V.2.0
 
 #include "RSA_fun.h"
 
 Intero RSA_encrypt(Intero message, Key Pubkey)
 {
-    return modexp(message, Pubkey.E, Pubkey.N);
+    if(message != NULL && Pubkey.N > 1 && Pubkey.E > 1)
+        return modexp(message, Pubkey.E, Pubkey.N);
+    else return -1;
 }
 
 Intero RSA_decrypt(Intero message, Key Privkey)
 {
-    return modexp(message, Privkey.E, Privkey.N);
+    if(message != NULL && Privkey.N > 1 && Privkey.E > 1)
+        return modexp(message, Privkey.E, Privkey.N);
+    else return -1;
 }
 
 
 //check the compliance with security standard
 bool E_check(Intero E, Intero Phi)
 {
-    return coprime(E,Phi) && (E-1!=Phi/4) && (E-1!=Phi/2);
+    return coprime(E,Phi) && (E-1!=Phi/4) && (E-1!=Phi/2) && E > 1;
 }
 
 bool Q_check(Intero Q, Intero P)
 {
     Intero dif = (P-Q);
-    dif.Abs();
+    abs(dif);
     P=(P-1)/2;
     Q=(Q-1)/2;
   
