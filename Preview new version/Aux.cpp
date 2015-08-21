@@ -8,6 +8,7 @@
 
 #include "Aux.h"
 
+using namespace RSA;
 using namespace Aux;
 
 //random number generator, only for test

@@ -11,14 +11,18 @@
 #include <gmpxx.h>
 #include "Aux.h"
 
-using namespace Aux;
 
-namespace Prime
+//using namespace Aux;
+
+namespace RSA
 {
-    typedef mpz_class  BigInteger;
-    
-    bool IsPrime(BigInteger number, Generator gen, int size, int precision = 20);
-    BigInteger Generates(Generator gen, int size, int precision = 20);
+    namespace Prime
+    {
+        using namespace Aux;
+        
+        bool IsPrime(BigInteger number, Generator gen, int size, int precision = 20);
+        BigInteger Generates(Generator gen, int size, int precision = 20);
+    }
 }
 
 #endif /* defined(__RSA__Prime__) */

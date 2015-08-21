@@ -8,7 +8,8 @@
 
 #include "Prime.h"
 
-using namespace Prime;
+using namespace RSA;
+using namespace RSA::Prime;
 
 void MRscomposition(BigInteger N, BigInteger &w, BigInteger &z)
 {

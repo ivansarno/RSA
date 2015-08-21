@@ -12,22 +12,24 @@
 #include <time.h>
 #include <stdlib.h>
 
-namespace Aux
+namespace RSA
 {
-    typedef mpz_class BigInteger;
-    BigInteger pow( BigInteger base, BigInteger exp, int size);
-    BigInteger mod_pow( BigInteger base, BigInteger exp, BigInteger mod, int size);
-    BigInteger inverse(BigInteger n, BigInteger modulo);
-    bool coprime (BigInteger a, BigInteger b);
-    
-    class Generator
+    namespace Aux
     {
-        Generator();
+        typedef mpz_class BigInteger;
+        BigInteger pow( BigInteger base, BigInteger exp, int size);
+        BigInteger mod_pow( BigInteger base, BigInteger exp, BigInteger mod, int size);
+        BigInteger inverse(BigInteger n, BigInteger modulo);
+        bool coprime (BigInteger a, BigInteger b);
         
-    public:
-        BigInteger get(int size);
-    };
-
+        class Generator
+        {
+        public:
+            Generator();
+            BigInteger get(int size);
+        };
+        
+    }
 }
 
 #endif /* defined(__RSA__Aux__) */
