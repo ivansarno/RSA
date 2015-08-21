@@ -21,7 +21,7 @@ Intero fastexp(Intero base, Intero esp)
 	{
 		Intero i = 1;
 		int j = 0;
-		Intero *tempris = new Intero[Block_size];
+		Intero *tempris = new Intero[Block_size]; //buffer for intermediate results
 		tempris[0] = base;
 		while (i < esp)
 		{

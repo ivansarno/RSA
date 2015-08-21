@@ -20,7 +20,7 @@
 #define Intero mpz_class 
 #define Primegen Primegenerator() //prime number generator
 #define Precision 15 //precision of Miller-Rabin test
-#define RandNum  mpz_class(randstring(), 10)   //rand() //random number generator
+#define RandNum  mpz_class(randstring(), 10)   //random number generator
 #define Randinit srand((int)time(NULL)); 
 #define Distance 65536 // distance between prime number (2^16)
 
