@@ -5,12 +5,14 @@
 //  Created by ivan sarno on 28/07/15.
 //  Copyright (c) 2015 ivan sarno. All rights reserved.
 //
+//Version V.3.0
 
 #include "Prime.h"
 
 using namespace RSA;
 using namespace RSA::Prime;
 
+//component of Miller-Rabin primality test
 void MRscomposition(BigInteger N, BigInteger &w, BigInteger &z)
 {
     BigInteger i=1;
@@ -60,7 +62,7 @@ bool MRtest(BigInteger N, Generator gen, int size, int precision)  //Miller-rabi
     
     MRscomposition(N,w,z);
     
-    bool ris =true;
+    bool ris =true;//default result
     int i=0;
     
     
@@ -70,7 +72,7 @@ bool MRtest(BigInteger N, Generator gen, int size, int precision)  //Miller-rabi
     {
         y = gen.get(size);
         y= y % N;
-        while(y<2)
+        while(y<2)//avoid random number < 2
         {
             y = gen.get(size);
             y= y % N;

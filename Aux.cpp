@@ -5,6 +5,7 @@
 //  Created by ivan sarno on 21/08/15.
 //  Copyright (c) 2015 ivan sarno. All rights reserved.
 //
+//Version V.3.0
 
 #include "Aux.h"
 
@@ -49,7 +50,7 @@ BigInteger Aux::pow(BigInteger base, BigInteger exp, int size)
             i *= 2;
         }
         BigInteger result = 1;
-        while (exp > 0)
+        while (exp > 0)//composes intermediate results
         {
             if (exp - i >= 0)
             {
@@ -100,9 +101,9 @@ BigInteger Aux::mod_pow(BigInteger base, BigInteger exp, BigInteger mod, int siz
 
 typedef struct
 {
-    BigInteger x;
-    BigInteger y;
-    BigInteger z;
+    BigInteger x;//greatest common divisisor
+    BigInteger y;//inverse of a mod b
+    BigInteger z;//intermediate value
 } triple;
 
 triple ExtendedEuclide(BigInteger a, BigInteger b)
@@ -127,11 +128,11 @@ triple ExtendedEuclide(BigInteger a, BigInteger b)
     return result;
 }
 
-BigInteger Aux::inverse(BigInteger n,BigInteger modulo)
+BigInteger Aux::inverse(BigInteger n,BigInteger modulus)
 {
-    triple ris = ExtendedEuclide(n,modulo);
+    triple ris = ExtendedEuclide(n,modulus);
     if (ris.y<0)
-        ris.y=modulo+ris.y;
+        ris.y=modulus+ris.y;
     
     return  ris.y;
 }
