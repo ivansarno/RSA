@@ -5,7 +5,7 @@
 //  Created by ivan sarno on 28/07/15.
 //  Copyright (c) 2015 ivan sarno. All rights reserved.
 //
-//Version V.3.0
+//Version V.3.1
 
 #include "Prime.h"
 
@@ -32,22 +32,22 @@ void MRscomposition(BigInteger N, BigInteger &w, BigInteger &z)
     }
 }
 
-bool MRpredicate1 (BigInteger y, BigInteger z, BigInteger N, int size)
+bool MRpredicate1 (const BigInteger &y, const BigInteger &z, const BigInteger &N)
 {
-    if (Aux::mod_pow(y,z,N,size)==1)
+    if (Aux::mod_pow(y,z,N)==1)
         return true;
     else return false;
 }
 
-bool MRpredicate2(BigInteger y, BigInteger N, BigInteger z, BigInteger w, int size)
+bool MRpredicate2(const BigInteger &y, const BigInteger &N, const BigInteger &z, const BigInteger &w)
 {
     BigInteger i=0;
-    bool cond = (Aux::mod_pow(y,Aux::pow(2,i,size)*z, N, size) == N-1);
+    bool cond = (Aux::mod_pow(y,Aux::pow(2,i)*z, N) == N-1);
     
     while (!cond && i < w)
     {
         i++;
-        cond = (Aux::mod_pow(y,Aux::pow(2,i,size)*z, N, size) == N-1);
+        cond = (Aux::mod_pow(y,Aux::pow(2,i)*z, N) == N-1);
     }
     
     if (i==w)
@@ -56,7 +56,7 @@ bool MRpredicate2(BigInteger y, BigInteger N, BigInteger z, BigInteger w, int si
     
 }
 
-bool MRtest(BigInteger N, Generator gen, int size, int precision)  //Miller-rabin test for prime number
+bool MRtest(const BigInteger &N, Generator &gen, unsigned int size, unsigned int precision)  //Miller-rabin test for prime number
 {
     BigInteger w; BigInteger z;
     
@@ -77,14 +77,14 @@ bool MRtest(BigInteger N, Generator gen, int size, int precision)  //Miller-rabi
             y = gen.get(size);
             y= y % N;
         }
-        ris = (coprime(y,N)) && (MRpredicate1(y, z, N, size)|| MRpredicate2(y, N, z, w, size));
+        ris = (coprime(y,N)) && (MRpredicate1(y, z, N)|| MRpredicate2(y, N, z, w));
         i++;
     }
     return ris;
 }
 
 //extract a random number and search a early prime
-BigInteger Prime::Generates(Aux::Generator gen, int size, int precision)
+BigInteger Prime::Generates(Aux::Generator &gen, unsigned int size, unsigned int precision)
 {
     BigInteger P = gen.get(size);
     if (P%2==0)
@@ -98,7 +98,7 @@ BigInteger Prime::Generates(Aux::Generator gen, int size, int precision)
     return P;
 }
 
-bool Prime::IsPrime(BigInteger number, Aux::Generator gen, int size, int precision)
+bool Prime::IsPrime(const BigInteger &number, Aux::Generator &gen, unsigned int size, unsigned int precision)
 {
     return MRtest(number, gen, size, precision);
 }

@@ -5,12 +5,18 @@
 //  Created by ivan sarno on 21/08/15.
 //  Copyright (c) 2015 ivan sarno. All rights reserved.
 //
-//Version V.3.0
+//Version V.3.1
 
 #include "Aux.h"
 
 using namespace RSA;
 using namespace Aux;
+
+//buffer
+BigInteger * Aux::power_buffer = NULL;
+unsigned int Aux::buffer_size = 0;
+
+
 
 //random number generator, only for test
 Aux::Generator::Generator()
@@ -18,7 +24,7 @@ Aux::Generator::Generator()
     srand((int)time(NULL));
 }
 
-BigInteger Aux::Generator::get(int size)
+BigInteger Aux::Generator::get(unsigned int size)
 {
     size = (size *3)/20 -1;
     char *rs = new char[size + 1];
@@ -31,7 +37,7 @@ BigInteger Aux::Generator::get(int size)
 };
 
 
-BigInteger Aux::pow(BigInteger base, BigInteger exp, int size)
+BigInteger Aux::pow(const BigInteger &base, BigInteger exp)
 {
     if (exp == 0)
         return 1;
@@ -39,13 +45,13 @@ BigInteger Aux::pow(BigInteger base, BigInteger exp, int size)
         return base;
     else
     {
+        power_buffer_check();
         BigInteger i = 1;
         int j = 0;
-        BigInteger *tempris = new BigInteger[size]; //buffer for intermediate results
-        tempris[0] = base;
+        power_buffer[0] = base;
         while (i < exp)
         {
-            tempris[j+1] = tempris[j] * tempris[j];
+            power_buffer[j+1] = power_buffer[j] * power_buffer[j];
             j++;
             i *= 2;
         }
@@ -54,18 +60,18 @@ BigInteger Aux::pow(BigInteger base, BigInteger exp, int size)
         {
             if (exp - i >= 0)
             {
-                result *= tempris[j];
+                result *= power_buffer[j];
                 exp -= i;
             }
             j--;
             i /= 2;
         }
-        delete [] tempris;
+        //power_buffer_release();
         return result;
     }
 }
 
-BigInteger Aux::mod_pow(BigInteger base, BigInteger exp, BigInteger mod, int size)
+BigInteger Aux::mod_pow(const BigInteger &base, BigInteger exp, const BigInteger &mod)
 {
     if (exp == 0)
         return 1;
@@ -73,13 +79,13 @@ BigInteger Aux::mod_pow(BigInteger base, BigInteger exp, BigInteger mod, int siz
         return base;
     else
     {
+        power_buffer_check();
         BigInteger i = 1;
         int j = 0;
-        BigInteger *tempris = new BigInteger [size];
-        tempris[0] = base;
+        power_buffer[0] = base;
         while (i < exp)
         {
-            tempris[j+1] = (tempris[j] * tempris[j]) % mod;
+            power_buffer[j+1] = (power_buffer[j] * power_buffer[j]) % mod;
             j++;
             i *= 2;
         }
@@ -88,13 +94,13 @@ BigInteger Aux::mod_pow(BigInteger base, BigInteger exp, BigInteger mod, int siz
         {
             if (exp - i >= 0)
             {
-                result = (result * tempris[j]) % mod;
+                result = (result * power_buffer[j]) % mod;
                 exp -= i;
             }
             j--;
             i /= 2;
         }
-        delete[] tempris;
+        //power_buffer_release();
         return result;
     }
 }
@@ -128,19 +134,129 @@ triple ExtendedEuclide(BigInteger a, BigInteger b)
     return result;
 }
 
-BigInteger Aux::inverse(BigInteger n,BigInteger modulus)
+void IExtendedEuclide(const BigInteger &a, const BigInteger &b, BigInteger &MCD, BigInteger &inverse)
 {
-    triple ris = ExtendedEuclide(n,modulus);
-    if (ris.y<0)
-        ris.y=modulus+ris.y;
+    if (b == 0)
+    {
+        MCD = a;
+        inverse = 1;
+        return;
+    }
     
-    return  ris.y;
+    long i = 0;
+    BigInteger x,y,z, temp, intermediate;
+    BigInteger *buffer_a = new BigInteger[buffer_size];
+    BigInteger *buffer_b = new BigInteger[buffer_size];
+    buffer_a[0] = a;
+    buffer_b[0] = b;
+    
+    while(buffer_b[i] > 0)
+    {
+        i++;
+        buffer_a[i] = buffer_b[i-1];
+        buffer_b[i] = buffer_a[i-1] % buffer_b[i-1];
+    }
+    
+    MCD = buffer_a[i];
+    intermediate = 1;
+    temp = 0;
+    
+    while(i > 0)
+    {
+        i--;
+        inverse = temp;
+        temp = intermediate - ((buffer_a[i] / buffer_b[i]) * temp);
+        intermediate = inverse;
+    }
+    
+    delete [] buffer_a;
+    delete [] buffer_b;
 }
 
-bool Aux::coprime(BigInteger a, BigInteger b)
+BigInteger Aux::inverse(const BigInteger &number, const BigInteger &modulus)
 {
-    triple temp = ExtendedEuclide(a, b);
-    if (temp.x == 1)
-        return true;
-    else return false;
+    if (modulus == 0)
+    {
+        return 0;
+    }
+    
+    long i = 0;
+    BigInteger result, temp, intermediate;
+    BigInteger *buffer_a = new BigInteger[buffer_size];
+    BigInteger *buffer_b = new BigInteger[buffer_size];
+    
+    buffer_a[0] = number;
+    buffer_b[0] = modulus;
+    
+    while(buffer_b[i] > 0)
+    {
+        i++;
+        buffer_a[i] = buffer_b[i-1];
+        buffer_b[i] = buffer_a[i-1] % buffer_b[i-1];
+    }
+    
+    result = 1;
+    intermediate = 1;
+    temp = 0;
+    
+    while(i > 0)
+    {
+        i--;
+        result = temp;
+        temp = intermediate - ((buffer_a[i] / buffer_b[i]) * temp);
+        intermediate = result;
+    }
+    
+    delete [] buffer_a;
+    delete [] buffer_b;
+    
+    if(result > 0)
+        return result;
+    else return modulus + result;
 }
+
+bool Aux::coprime (BigInteger a, BigInteger b)
+{
+    if (b == 0)
+        return false;
+    
+    BigInteger temp;
+    long i = 0;
+    
+    while(b > 0)
+    {
+        i++;
+        temp = b;
+        b = a % b;
+        a = temp;
+    }
+    
+    return a == 1;
+}
+
+void Aux::power_buffer_check()
+{
+    if(power_buffer == NULL)
+    {
+        power_buffer = new BigInteger[buffer_size];
+    }
+}
+
+void Aux::power_buffer_init(unsigned int size)
+{
+    buffer_size = size;
+    power_buffer = new BigInteger[size];
+}
+
+void Aux::power_buffer_release()
+{
+    delete [] power_buffer;
+    power_buffer = NULL;
+}
+
+
+
+
+
+
+

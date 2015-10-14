@@ -1,27 +1,25 @@
-#include <iostream>
-#include "RSA.h"
-#include <assert.h>
+//
+//  Aux.h
+//  RSA
+//
+//  Created by ivan sarno on 21/08/15.
+//  Copyright (c) 2015 ivan sarno. All rights reserved.
+//
+//Version V.3.1
 
-using namespace RSA;
+#include "Test.h"
 
 
-
-
-
-int main()
+bool RSA::test(unsigned long message, unsigned int size)
 {
-	BigInteger pub, priv, modulus;
+    BigInteger pub, priv, modulus;
     Generator gen;
-    int size = 1024;
     Keygen(pub, priv, modulus, gen, size);
-
-    BigInteger message = 300300;
     BigInteger crypto = Encrypt(message, pub, modulus, size);
     BigInteger message1 = Decrypt(crypto, priv, modulus, size);
-
-	
-	
-	std::cout << crypto << "\n\n\n" << message1 << "\n\n\n";// << priv << "\n";
-
-	return 0;
+    bool result = message1 == message;
+    if(result)
+        std::cout << "RSA test OK\n";
+    else std::cout << "RSA test ERROR\n";
+    return result;
 }
