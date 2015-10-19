@@ -5,7 +5,7 @@
 //  Created by ivan sarno on 21/08/15.
 //  Copyright (c) 2015 ivan sarno. All rights reserved.
 //
-//Version V.3.1
+//Version V.3.2
 
 #include "RSA.h"
 
@@ -13,20 +13,26 @@ using namespace RSA;
 
 BigInteger RSA::Encrypt(const BigInteger &message, const BigInteger &pubkey, const BigInteger &modulus, unsigned int size)
 {
-    //if(message != NULL && pubkey > 1 && modulus > 1)
-    power_buffer_init(size);
-    BigInteger result = Aux::mod_pow(message, pubkey, modulus);
-    power_buffer_release();
-    return result;
+    if(message != NULL && modulus != NULL && pubkey != NULL && modulus > 1 && pubkey > 1 && size >= 64)
+    {
+        power_buffer_init(size);
+        BigInteger result = Aux::mod_pow(message, pubkey, modulus);
+        power_buffer_release();
+        return result;
+    }
+    return 0;
 }
 
 BigInteger RSA::Decrypt(const BigInteger &message, const BigInteger &privkey, const BigInteger &modulus, unsigned int size)
 {
-    //if(message != NULL && modulus > 1 && privkey > 1)
-    power_buffer_init(size);
-    BigInteger result = Aux::mod_pow(message, privkey, modulus);
-    power_buffer_release();
-    return result;
+    if(message != NULL && modulus != NULL && privkey != NULL && modulus > 1 && privkey > 1 && size >= 64)
+    {
+        power_buffer_init(size);
+        BigInteger result = Aux::mod_pow(message, privkey, modulus);
+        power_buffer_release();
+        return result;
+    }
+    return 0;
 }
 
 
@@ -46,8 +52,11 @@ bool Q_check(BigInteger Q, BigInteger P, unsigned long distance)
     return coprime(P,Q) && (dif > distance);
 }
 
-void RSA::Keygen(BigInteger &pubkey, BigInteger &privkey, BigInteger &modulus, RSA::Aux::Generator gen, unsigned int size, unsigned int precision, unsigned long distance)
+bool RSA::Keygen(BigInteger &pubkey, BigInteger &privkey, BigInteger &modulus, RSA::Aux::Generator gen, unsigned int size, unsigned int precision, unsigned long distance)
 {
+    if(size < 64 || precision < 2)
+        return false;
+    
     power_buffer_init(size);
     
     BigInteger primeP= Prime::Generates(gen, size/2); //generates prime number for key mod
@@ -66,18 +75,12 @@ void RSA::Keygen(BigInteger &pubkey, BigInteger &privkey, BigInteger &modulus, R
     BigInteger E = gen.get(size);
     E = E % N;//public key
  
-#ifdef TEMP
-    while ((E < 2) || (!coprime(E,Phi))) //make sure it is appropriate for security standards
-    {
-        E++;
-    }
-#endif
-#ifdef ECHECK
+
     while (!E_check(E, Phi)) //make sure it is appropriate for security standards
     {
         E++;
     }
-#endif
+
     
     pubkey = E;
     modulus = N;
@@ -85,4 +88,6 @@ void RSA::Keygen(BigInteger &pubkey, BigInteger &privkey, BigInteger &modulus, R
     privkey = Aux::inverse(E, Phi); //private key
     
     power_buffer_release();
+    
+    return true;
 }

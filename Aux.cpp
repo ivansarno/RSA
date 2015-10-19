@@ -5,7 +5,7 @@
 //  Created by ivan sarno on 21/08/15.
 //  Copyright (c) 2015 ivan sarno. All rights reserved.
 //
-//Version V.3.1
+//Version V.3.2
 
 #include "Aux.h"
 
@@ -26,14 +26,15 @@ Aux::Generator::Generator()
 
 BigInteger Aux::Generator::get(unsigned int size)
 {
-    size = (size *3)/20 -1;
-    char *rs = new char[size + 1];
+    size /= 8;
+    uint8_t *byte = new uint8_t[size];
     int i;
     for (i = 0; i < size; i++)
-            rs[i] = (char) (rand() % 10 + 48);
-        
-    rs[size] = '\0';
-    return mpz_class(rs, 10);
+            byte[i] = rand();
+    
+    BigInteger n = byte2biginteger(byte, size);
+    delete [] byte;
+    return n;
 };
 
 
@@ -252,6 +253,14 @@ void Aux::power_buffer_release()
 {
     delete [] power_buffer;
     power_buffer = NULL;
+}
+
+BigInteger Aux::byte2biginteger(uint8_t *byte, unsigned int size)
+{
+    mpz_t z;
+    mpz_init(z);
+    mpz_import(z, size, 1, sizeof(byte[0]), 0, 0, byte);
+    return BigInteger(z);
 }
 
 
