@@ -19,7 +19,7 @@ bool RSA::test(unsigned long message, unsigned int size)
     BigInteger message1 = Decrypt(crypto, priv, modulus, size);
     bool result = message1 == message;
     if(result)
-        std::cout << modulus<< "RSA test OK\n";
+        std::cout << "RSA test OK\n";
     else std::cout << "RSA test ERROR\n";
     return result;
 }
