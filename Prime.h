@@ -21,7 +21,14 @@ namespace RSA
     {
         using namespace Aux;
         
-        bool IsPrime(const BigInteger &number, Generator &gen, unsigned int size, unsigned int precision = 20); //precision of Miller-Rabin test, error = 1/2^2n
+        //gen = random number generator
+        //size = number of  bit of nember tested
+        //precision = error of MIller-Rabin test = 1/2^(2* precision)
+        bool IsPrime(const BigInteger &number, Generator &gen, unsigned int size, unsigned int precision = 20);
+        
+        //gen = random number generator
+        //size = number of  bit of prime generated
+        //precision = error of MIller-Rabin test = 1/2^(2* precision)
         BigInteger Generates(Generator &gen, unsigned int size, unsigned int precision = 20);
     }
 }

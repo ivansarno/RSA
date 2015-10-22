@@ -14,7 +14,7 @@ using namespace Aux;
 
 //buffer
 BigInteger * Aux::power_buffer = NULL;
-unsigned int Aux::buffer_size = 0;
+unsigned int Aux::buffer_size = 1024;
 
 
 
@@ -46,11 +46,15 @@ BigInteger Aux::pow(const BigInteger &base, BigInteger exp)
         return base;
     else
     {
-        power_buffer_check();
+        
+#ifdef INDIPENDENT
+        power_buffer_check();//for using outside of RSA
+#endif
+        
         BigInteger i = 1;
         int j = 0;
         power_buffer[0] = base;
-        while (i < exp)
+        while (i < exp) //iterates dupplication
         {
             power_buffer[j+1] = power_buffer[j] * power_buffer[j];
             j++;
@@ -67,7 +71,6 @@ BigInteger Aux::pow(const BigInteger &base, BigInteger exp)
             j--;
             i /= 2;
         }
-        //power_buffer_release();
         return result;
     }
 }
@@ -80,18 +83,22 @@ BigInteger Aux::mod_pow(const BigInteger &base, BigInteger exp, const BigInteger
         return base;
     else
     {
-        power_buffer_check();
+        
+#ifdef RSA_INDIPENDENT
+        power_buffer_check();//for using outside of RSA
+#endif
+        
         BigInteger i = 1;
         int j = 0;
         power_buffer[0] = base;
-        while (i < exp)
+        while (i < exp)     //iterates dupplication
         {
             power_buffer[j+1] = (power_buffer[j] * power_buffer[j]) % mod;
             j++;
             i *= 2;
         }
         BigInteger result = 1;
-        while (exp > 0)
+        while (exp > 0)     //composes intermediate results
         {
             if (exp - i >= 0)
             {
@@ -101,7 +108,7 @@ BigInteger Aux::mod_pow(const BigInteger &base, BigInteger exp, const BigInteger
             j--;
             i /= 2;
         }
-        //power_buffer_release();
+
         return result;
     }
 }
@@ -135,6 +142,7 @@ triple ExtendedEuclide(BigInteger a, BigInteger b)
     return result;
 }
 
+//iterative version of extended euclide
 void IExtendedEuclide(const BigInteger &a, const BigInteger &b, BigInteger &MCD, BigInteger &inverse)
 {
     if (b == 0)
@@ -145,13 +153,13 @@ void IExtendedEuclide(const BigInteger &a, const BigInteger &b, BigInteger &MCD,
     }
     
     long i = 0;
-    BigInteger x,y,z, temp, intermediate;
-    BigInteger *buffer_a = new BigInteger[buffer_size];
+    BigInteger temp, intermediate;
+    BigInteger *buffer_a = new BigInteger[buffer_size]; //buffer for intermediates values
     BigInteger *buffer_b = new BigInteger[buffer_size];
     buffer_a[0] = a;
     buffer_b[0] = b;
     
-    while(buffer_b[i] > 0)
+    while(buffer_b[i] > 0) //find greatest common divisor
     {
         i++;
         buffer_a[i] = buffer_b[i-1];
@@ -162,7 +170,7 @@ void IExtendedEuclide(const BigInteger &a, const BigInteger &b, BigInteger &MCD,
     intermediate = 1;
     temp = 0;
     
-    while(i > 0)
+    while(i > 0) //inverse calculation from intermediates values
     {
         i--;
         inverse = temp;
@@ -189,7 +197,7 @@ BigInteger Aux::inverse(const BigInteger &number, const BigInteger &modulus)
     buffer_a[0] = number;
     buffer_b[0] = modulus;
     
-    while(buffer_b[i] > 0)
+    while(buffer_b[i] > 0) //find intermediate values of greatest common divisor
     {
         i++;
         buffer_a[i] = buffer_b[i-1];
@@ -200,7 +208,7 @@ BigInteger Aux::inverse(const BigInteger &number, const BigInteger &modulus)
     intermediate = 1;
     temp = 0;
     
-    while(i > 0)
+    while(i > 0) //inverse calculation from intermediates values
     {
         i--;
         result = temp;
@@ -224,7 +232,7 @@ bool Aux::coprime (BigInteger a, BigInteger b)
     BigInteger temp;
     long i = 0;
     
-    while(b > 0)
+    while(b > 0) //find greatest common divisor
     {
         i++;
         temp = b;
@@ -235,6 +243,7 @@ bool Aux::coprime (BigInteger a, BigInteger b)
     return a == 1;
 }
 
+//buffer routines
 void Aux::power_buffer_check()
 {
     if(power_buffer == NULL)
@@ -254,6 +263,7 @@ void Aux::power_buffer_release()
     delete [] power_buffer;
     power_buffer = NULL;
 }
+
 
 BigInteger Aux::byte2biginteger(uint8_t *byte, unsigned int size)
 {

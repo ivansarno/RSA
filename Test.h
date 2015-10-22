@@ -13,6 +13,8 @@
 #include <iostream>
 #include "RSA.h"
 
+
+//automatic encryption/decryption test
 namespace RSA
 {
     bool test(unsigned long message, unsigned int size);

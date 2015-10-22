@@ -23,7 +23,8 @@ namespace RSA
         BigInteger inverse(const BigInteger &number, const BigInteger &modulus);
         bool coprime (BigInteger a, BigInteger b);
         BigInteger byte2biginteger(uint8_t *byte, unsigned int size);
-        //controls for buffers allocation
+       
+        //buffer allocation routines
         void power_buffer_check();
         void power_buffer_init(unsigned int size);
         void power_buffer_release();

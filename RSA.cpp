@@ -42,6 +42,7 @@ bool E_check(const BigInteger &E, const BigInteger &Phi)
     return coprime(E,Phi) && (E-1!=Phi/4) && (E-1!=Phi/2) && E > 1;
 }
 
+//check the compliance with security standard
 bool Q_check(BigInteger Q, BigInteger P, unsigned long distance)
 {
     BigInteger dif = (P-Q);
@@ -62,7 +63,7 @@ bool RSA::Keygen(BigInteger &pubkey, BigInteger &privkey, BigInteger &modulus, R
     BigInteger primeP= Prime::Generates(gen, size/2); //generates prime number for key mod
     BigInteger primeQ= Prime::Generates(gen, size/2);
 
-#ifdef QCHECK
+#ifdef RSA_QCHECK
     while (!Q_check(primeQ,primeP, distance)) //make sure it is appropriate for security standards
     {
         primeQ= Prime::Generates(gen, size/2);
@@ -70,22 +71,18 @@ bool RSA::Keygen(BigInteger &pubkey, BigInteger &privkey, BigInteger &modulus, R
 #endif
     
     BigInteger Phi = (primeP-1) * (primeQ-1);
-    BigInteger N = primeP * primeQ; //Mod of key
+    modulus = primeP * primeQ; //Mod of key
     
-    BigInteger E = gen.get(size);
-    E = E % N;//public key
+    pubkey = gen.get(size);
+    pubkey = pubkey % modulus;//public key
  
 
-    while (!E_check(E, Phi)) //make sure it is appropriate for security standards
+    while (!E_check(pubkey, Phi)) //make sure it is appropriate for security standards
     {
-        E++;
+        pubkey++;
     }
 
-    
-    pubkey = E;
-    modulus = N;
-    
-    privkey = Aux::inverse(E, Phi); //private key
+    privkey = Aux::inverse(pubkey, Phi); //private key
     
     power_buffer_release();
     
