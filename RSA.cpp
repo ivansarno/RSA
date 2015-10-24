@@ -13,7 +13,7 @@ using namespace RSA;
 
 BigInteger RSA::Encrypt(const BigInteger &message, const BigInteger &pubkey, const BigInteger &modulus, unsigned int size)
 {
-    if(message != NULL && modulus != NULL && pubkey != NULL && modulus > 1 && pubkey > 1 && size >= 64)
+    if(modulus > 1 && pubkey > 1 && size >= 64)
     {
         power_buffer_init(size);
         BigInteger result = Aux::mod_pow(message, pubkey, modulus);
@@ -25,7 +25,7 @@ BigInteger RSA::Encrypt(const BigInteger &message, const BigInteger &pubkey, con
 
 BigInteger RSA::Decrypt(const BigInteger &message, const BigInteger &privkey, const BigInteger &modulus, unsigned int size)
 {
-    if(message != NULL && modulus != NULL && privkey != NULL && modulus > 1 && privkey > 1 && size >= 64)
+    if(modulus > 1 && privkey > 1 && size >= 64)
     {
         power_buffer_init(size);
         BigInteger result = Aux::mod_pow(message, privkey, modulus);
