@@ -5,7 +5,7 @@
 //  Created by ivan sarno on 28/07/15.
 //  Copyright (c) 2015 ivan sarno. All rights reserved.
 //
-//Version V.3.2
+//Version V.3.3
 
 #include "Prime.h"
 
@@ -34,7 +34,7 @@ void MRscomposition(BigInteger N, BigInteger &w, BigInteger &z)
 
 bool MRpredicate1 (const BigInteger &y, const BigInteger &z, const BigInteger &N)
 {
-    if (Aux::mod_pow(y,z,N)==1)
+    if (Utils::mod_pow(y,z,N)==1)
         return true;
     else return false;
 }
@@ -42,12 +42,12 @@ bool MRpredicate1 (const BigInteger &y, const BigInteger &z, const BigInteger &N
 bool MRpredicate2(const BigInteger &y, const BigInteger &N, const BigInteger &z, const BigInteger &w)
 {
     BigInteger i=0;
-    bool cond = (Aux::mod_pow(y,Aux::pow(2,i)*z, N) == N-1);
+    bool cond = (Utils::mod_pow(y,Utils::pow(2,i)*z, N) == N-1);
     
     while (!cond && i < w)
     {
         i++;
-        cond = (Aux::mod_pow(y,Aux::pow(2,i)*z, N) == N-1);
+        cond = (Utils::mod_pow(y,Utils::pow(2,i)*z, N) == N-1);
     }
     
     if (i==w)
@@ -84,7 +84,7 @@ bool MRtest(const BigInteger &N, Generator &gen, unsigned int size, unsigned int
 }
 
 //extract a random number and search a early prime
-BigInteger Prime::Generates(Aux::Generator &gen, unsigned int size, unsigned int precision)
+BigInteger Prime::Generates(Utils::Generator &gen, unsigned int size, unsigned int precision)
 {
     BigInteger P = gen.get(size);
     if (P%2==0)
@@ -98,7 +98,7 @@ BigInteger Prime::Generates(Aux::Generator &gen, unsigned int size, unsigned int
     return P;
 }
 
-bool Prime::IsPrime(const BigInteger &number, Aux::Generator &gen, unsigned int size, unsigned int precision)
+bool Prime::IsPrime(const BigInteger &number, Utils::Generator &gen, unsigned int size, unsigned int precision)
 {
     return MRtest(number, gen, size, precision);
 }

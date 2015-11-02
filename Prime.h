@@ -5,21 +5,21 @@
 //  Created by ivan sarno on 28/07/15.
 //  Copyright (c) 2015 ivan sarno. All rights reserved.
 //
-//Version V.3.2
+//Version V.3.3
 
 #ifndef __RSA__Prime__
 #define __RSA__Prime__
 #include <gmpxx.h>
-#include "Aux.h"
+#include "Utils.h"
 
 
-//using namespace Aux;
+//using namespace Utils;
 
 namespace RSA
 {
     namespace Prime
     {
-        using namespace Aux;
+        using namespace Utils;
         
         //gen = random number generator
         //size = number of  bit of nember tested

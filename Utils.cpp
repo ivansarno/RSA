@@ -1,30 +1,30 @@
 //
-//  Aux.cpp
+//  Utils.cpp
 //  RSA
 //
 //  Created by ivan sarno on 21/08/15.
 //  Copyright (c) 2015 ivan sarno. All rights reserved.
 //
-//Version V.3.2
+//Version V.3.3
 
-#include "Aux.h"
+#include "Utils.h"
 
 using namespace RSA;
-using namespace Aux;
+using namespace Utils;
 
 //buffer
-BigInteger * Aux::power_buffer = NULL;
-unsigned int Aux::buffer_size = 1024;
+BigInteger * Utils::power_buffer = NULL;
+unsigned int Utils::buffer_size = 1024;
 
 
 
 //random number generator, only for test
-Aux::Generator::Generator()
+Utils::Generator::Generator()
 {
     srand((int)time(NULL));
 }
 
-BigInteger Aux::Generator::get(unsigned int size)
+BigInteger Utils::Generator::get(unsigned int size)
 {
     size /= 8;
     uint8_t *byte = new uint8_t[size];
@@ -38,7 +38,7 @@ BigInteger Aux::Generator::get(unsigned int size)
 };
 
 
-BigInteger Aux::pow(const BigInteger &base, BigInteger exp)
+BigInteger Utils::pow(const BigInteger &base, BigInteger exp)
 {
     if (exp == 0)
         return 1;
@@ -75,7 +75,7 @@ BigInteger Aux::pow(const BigInteger &base, BigInteger exp)
     }
 }
 
-BigInteger Aux::mod_pow(const BigInteger &base, BigInteger exp, const BigInteger &mod)
+BigInteger Utils::mod_pow(const BigInteger &base, BigInteger exp, const BigInteger &mod)
 {
     if (exp == 0)
         return 1;
@@ -182,7 +182,7 @@ void IExtendedEuclide(const BigInteger &a, const BigInteger &b, BigInteger &MCD,
     delete [] buffer_b;
 }
 
-BigInteger Aux::inverse(const BigInteger &number, const BigInteger &modulus)
+BigInteger Utils::inverse(const BigInteger &number, const BigInteger &modulus)
 {
     if (modulus == 0)
     {
@@ -224,7 +224,7 @@ BigInteger Aux::inverse(const BigInteger &number, const BigInteger &modulus)
     else return modulus + result;
 }
 
-bool Aux::coprime (BigInteger a, BigInteger b)
+bool Utils::coprime (BigInteger a, BigInteger b)
 {
     if (b == 0)
         return false;
@@ -244,7 +244,7 @@ bool Aux::coprime (BigInteger a, BigInteger b)
 }
 
 //buffer routines
-void Aux::power_buffer_check()
+void Utils::power_buffer_check()
 {
     if(power_buffer == NULL)
     {
@@ -252,20 +252,20 @@ void Aux::power_buffer_check()
     }
 }
 
-void Aux::power_buffer_init(unsigned int size)
+void Utils::power_buffer_init(unsigned int size)
 {
     buffer_size = size;
     power_buffer = new BigInteger[size];
 }
 
-void Aux::power_buffer_release()
+void Utils::power_buffer_release()
 {
     delete [] power_buffer;
     power_buffer = NULL;
 }
 
 
-BigInteger Aux::byte2biginteger(uint8_t *byte, unsigned int size)
+BigInteger Utils::byte2biginteger(uint8_t *byte, unsigned int size)
 {
     mpz_t z;
     mpz_init(z);

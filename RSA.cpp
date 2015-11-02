@@ -5,7 +5,7 @@
 //  Created by ivan sarno on 21/08/15.
 //  Copyright (c) 2015 ivan sarno. All rights reserved.
 //
-//Version V.3.2
+//Version V.3.3
 
 #include "RSA.h"
 
@@ -16,7 +16,7 @@ BigInteger RSA::Encrypt(const BigInteger &message, const BigInteger &pubkey, con
     if(modulus > 1 && pubkey > 1 && size >= 64)
     {
         power_buffer_init(size);
-        BigInteger result = Aux::mod_pow(message, pubkey, modulus);
+        BigInteger result = Utils::mod_pow(message, pubkey, modulus);
         power_buffer_release();
         return result;
     }
@@ -28,7 +28,7 @@ BigInteger RSA::Decrypt(const BigInteger &message, const BigInteger &privkey, co
     if(modulus > 1 && privkey > 1 && size >= 64)
     {
         power_buffer_init(size);
-        BigInteger result = Aux::mod_pow(message, privkey, modulus);
+        BigInteger result = Utils::mod_pow(message, privkey, modulus);
         power_buffer_release();
         return result;
     }
@@ -53,7 +53,7 @@ bool Q_check(BigInteger Q, BigInteger P, unsigned long distance)
     return coprime(P,Q) && (dif > distance);
 }
 
-bool RSA::Keygen(BigInteger &pubkey, BigInteger &privkey, BigInteger &modulus, RSA::Aux::Generator gen, unsigned int size, unsigned int precision, unsigned long distance)
+bool RSA::Keygen(BigInteger &pubkey, BigInteger &privkey, BigInteger &modulus, RSA::Utils::Generator gen, unsigned int size, unsigned int precision, unsigned long distance)
 {
     if(size < 64 || precision < 2)
         return false;
@@ -82,7 +82,7 @@ bool RSA::Keygen(BigInteger &pubkey, BigInteger &privkey, BigInteger &modulus, R
         pubkey++;
     }
 
-    privkey = Aux::inverse(pubkey, Phi); //private key
+    privkey = Utils::inverse(pubkey, Phi); //private key
     
     power_buffer_release();
     
