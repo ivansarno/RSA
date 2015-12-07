@@ -1,3 +1,7 @@
+Version 3.4
+
+Performance and memory usage improvements
+
 Version 3.3
 
 1) Rename Aux in Utils (because Windows can’t save file named aux)

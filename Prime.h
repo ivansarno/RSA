@@ -5,7 +5,7 @@
 //  Created by ivan sarno on 28/07/15.
 //  Copyright (c) 2015 ivan sarno. All rights reserved.
 //
-//Version V.3.3
+//Version V.3.4
 
 #ifndef __RSA__Prime__
 #define __RSA__Prime__
