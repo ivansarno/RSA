@@ -42,20 +42,19 @@ bool E_check(const BigInteger &E, const BigInteger &Phi)
 bool Q_check(BigInteger Q, BigInteger P, unsigned long distance)
 {
     BigInteger dif = (P-Q);
-    abs(dif);
     P=(P-1)>>1;
     Q=(Q-1)>>1;
-    
-    return coprime(P,Q) && (dif > distance);
+
+    return coprime(P,Q) && (abs(dif) > distance);
 }
 
 bool RSA::Keygen(BigInteger &pubkey, BigInteger &privkey, BigInteger &modulus, RSA::Utils::Generator gen, unsigned int size, unsigned int precision, unsigned long distance)
 {
     if(size < 64 || precision < 2)
         return false;
-    
 
-    
+
+
     BigInteger primeP= Prime::Generates(gen, size/2); //generates prime number for key mod
     BigInteger primeQ= Prime::Generates(gen, size/2);
 
@@ -65,13 +64,13 @@ bool RSA::Keygen(BigInteger &pubkey, BigInteger &privkey, BigInteger &modulus, R
         primeQ= Prime::Generates(gen, size/2);
     }
 #endif
-    
+
     BigInteger Phi = (primeP-1) * (primeQ-1);
     modulus = primeP * primeQ; //Mod of key
-    
+
     pubkey = gen.get(size);
     pubkey = pubkey % modulus;//public key
- 
+
 
     while (!E_check(pubkey, Phi)) //make sure it is appropriate for security standards
     {
@@ -79,6 +78,6 @@ bool RSA::Keygen(BigInteger &pubkey, BigInteger &privkey, BigInteger &modulus, R
     }
 
     privkey = Utils::inverse(pubkey, Phi, size); //private key
-    
+
     return true;
 }

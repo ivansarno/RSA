@@ -25,7 +25,7 @@ BigInteger Utils::Generator::get(unsigned int size)
     int i;
     for (i = 0; i < size; i++)
         byte[i] = rand();
-    
+
     BigInteger n = byte2biginteger(byte, size);
     delete[] byte;
     return n;
@@ -35,7 +35,7 @@ BigInteger Utils::Generator::get(unsigned int size)
 BigInteger Utils::pow(BigInteger base, BigInteger exp)
 {
     BigInteger resoult = 1;
-    
+
     while(exp > 0)
     {
         if((exp & 1) == 1)
@@ -43,14 +43,14 @@ BigInteger Utils::pow(BigInteger base, BigInteger exp)
         base *= base;
         exp >>=1;
     }
-    
+
     return resoult;
 }
 
 BigInteger Utils::mod_pow(BigInteger base, BigInteger exp, const BigInteger &mod)
 {
     BigInteger resoult = 1;
-    
+
     while(exp > 0)
     {
         if((exp & 1) == 1)
@@ -58,7 +58,7 @@ BigInteger Utils::mod_pow(BigInteger base, BigInteger exp, const BigInteger &mod
         base = (base * base) % mod;
         exp >>=1;
     }
-    
+
     return resoult;
 }
 
@@ -73,21 +73,21 @@ triple ExtendedEuclide(BigInteger a, BigInteger b)
 {
     triple result;
     triple temp;
-    
+
     if (b == 0)
     {
         result.x = a;
         result.y = 1;
         result.z = 0;
-        
+
         return result;
     }
     else temp = ExtendedEuclide(b, a % b);
-    
+
     result.x = temp.x;
     result.y = temp.z;
     result.z = temp.y - ((a / b) * temp.z);
-    
+
     return result;
 }
 
@@ -100,25 +100,25 @@ void IExtendedEuclide(const BigInteger &a, const BigInteger &b, BigInteger &MCD,
         inverse = 1;
         return;
     }
-    
+
     unsigned long i = 0;
     BigInteger temp, intermediate;
     BigInteger *buffer_a = new BigInteger[size]; //buffer for intermediates values
     BigInteger *buffer_b = new BigInteger[size];
     buffer_a[0] = a;
     buffer_b[0] = b;
-    
+
     while(buffer_b[i] > 0) //find greatest common divisor
     {
         i++;
         buffer_a[i] = buffer_b[i-1];
         buffer_b[i] = buffer_a[i-1] % buffer_b[i-1];
     }
-    
+
     MCD = buffer_a[i];
     intermediate = 1;
     temp = 0;
-    
+
     while(i > 0) //inverse calculation from intermediates values
     {
         i--;
@@ -126,7 +126,7 @@ void IExtendedEuclide(const BigInteger &a, const BigInteger &b, BigInteger &MCD,
         temp = intermediate - ((buffer_a[i] / buffer_b[i]) * temp);
         intermediate = inverse;
     }
-    
+
     delete [] buffer_a;
     delete [] buffer_b;
 }
@@ -137,26 +137,26 @@ BigInteger Utils::inverse(const BigInteger &number, const BigInteger &modulus, u
     {
         return 0;
     }
-    
+
     long i = 0;
     BigInteger result, temp, intermediate;
     BigInteger *buffer_a = new BigInteger[size];
     BigInteger *buffer_b = new BigInteger[size];
-    
+
     buffer_a[0] = number;
     buffer_b[0] = modulus;
-    
+
     while(buffer_b[i] > 0) //find intermediate values of greatest common divisor
     {
         i++;
         buffer_a[i] = buffer_b[i-1];
         buffer_b[i] = buffer_a[i-1] % buffer_b[i-1];
     }
-    
+
     result = 1;
     intermediate = 1;
     temp = 0;
-    
+
     while(i > 0) //inverse calculation from intermediates values
     {
         i--;
@@ -164,10 +164,10 @@ BigInteger Utils::inverse(const BigInteger &number, const BigInteger &modulus, u
         temp = intermediate - ((buffer_a[i] / buffer_b[i]) * temp);
         intermediate = result;
     }
-    
+
     delete [] buffer_a;
     delete [] buffer_b;
-    
+
     if(result > 0)
         return result;
     else return modulus + result;
@@ -177,10 +177,10 @@ bool Utils::coprime (BigInteger a, BigInteger b)
 {
     if (b == 0)
         return false;
-    
+
     BigInteger temp;
     long i = 0;
-    
+
     while(b > 0) //find greatest common divisor
     {
         i++;
@@ -188,7 +188,7 @@ bool Utils::coprime (BigInteger a, BigInteger b)
         b = a % b;
         a = temp;
     }
-    
+
     return a == 1;
 }
 
@@ -198,5 +198,7 @@ BigInteger Utils::byte2biginteger(uint8_t *byte, unsigned int size)
     mpz_t z;
     mpz_init(z);
     mpz_import(z, size, 1, sizeof(byte[0]), 0, 0, byte);
-    return BigInteger(z);
+    auto res = BigInteger(z);
+    mpz_clear(z);
+    return res;
 }
