@@ -5,7 +5,7 @@
 //  Created by ivan sarno on 21/08/15.
 //  Copyright (c) 2015 ivan sarno. All rights reserved.
 //
-//Version V.3.4
+//Version V.3.5
 
 #ifndef __RSA__Utils__
 #define __RSA__Utils__
@@ -28,8 +28,20 @@ namespace RSA
         class Generator
         {
         public:
-            Generator();
-            virtual BigInteger get(unsigned int size);//return a positive BigInteger of size bit
+            virtual BigInteger get(unsigned int size)=0;//return a positive BigInteger of size bit
+        };
+        
+        class TestGenerator: public Generator
+        {
+        private:
+            gmp_randstate_t rstate;
+            mpz_t rand;
+            unsigned long long seed;
+        public:
+            TestGenerator();
+            TestGenerator(unsigned long long seed);
+            ~TestGenerator();
+            BigInteger get(unsigned int size);//return a positive BigInteger of size bit
         };
     }
 }
