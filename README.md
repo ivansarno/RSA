@@ -9,9 +9,9 @@ The library includes function to:
 
 **Random Number Generator**
 
-Random Number Generator included is only for testing, user can replace it subclassing RSA::Aux::Generator 
+Random Number Generator included is only for testing, user can replace it subclassing RSA::Utils::Generator 
 
-**Credit**
+**Dependencies**
 
 Arbitrary Precision Library from GMP.  Link: https://gmplib.org
 
