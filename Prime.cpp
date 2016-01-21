@@ -105,7 +105,7 @@ bool Prime::IsPrime(const BigInteger &number, unsigned int size, unsigned int pr
 {
     if(number == 2)
         return true;
-    if(BigInteger(number & 1) == 0)
+    if(BigInteger(number & 1) == 0 || number < 2)
         return false;
     auto gen = TestGenerator();
     return MRtest(number, size, precision, &gen);
