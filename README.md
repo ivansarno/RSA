@@ -1,6 +1,8 @@
 # RSA
 RSA C++ implementation
 
+**This project will no longer be updated**
+
 The library includes function to:
 
     -encrypt
