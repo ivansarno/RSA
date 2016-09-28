@@ -6,7 +6,7 @@ RSA C++ implementation
 The library includes function to:
 
     -encrypt
-    -decrypt and 
+    -decrypt 
     -key generation.
 
 **Random Number Generator**

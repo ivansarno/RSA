@@ -112,7 +112,7 @@ bool Prime::IsPrime(const BigInteger &number, unsigned int size, unsigned int pr
 }
 
 //extract a random number and search a early prime, to use with threads
-void Prime::TNextPrime(BigInteger *current, unsigned int size, unsigned int precision)
+void Prime::ThreadsNextPrime(BigInteger *current, unsigned int size, unsigned int precision)
 {
     if(*current < 2)
     {
@@ -131,7 +131,7 @@ void Prime::TNextPrime(BigInteger *current, unsigned int size, unsigned int prec
 }
 
 //Version for worker routine
-bool WMRtest(const BigInteger &N, unsigned int size, unsigned int precision, std::atomic<bool> *not_found, TestGenerator *gen)  //Miller-rabin test for prime number
+bool WorkersMRtest(const BigInteger &N, unsigned int size, unsigned int precision, std::atomic<bool> *not_found, TestGenerator *gen)  //Miller-rabin test for prime number
 {
     unsigned int w; BigInteger z;
     
@@ -162,7 +162,7 @@ void WorkerRoutine(BigInteger *current, int size, unsigned int precision, int id
     BigInteger number = *current + 2*id;
     auto gen = TestGenerator();
     
-    while (*not_found && !WMRtest(number, size, precision, not_found, &gen))
+    while (*not_found && !WorkersMRtest(number, size, precision, not_found, &gen))
     {
         number += increment;
     }
@@ -175,7 +175,7 @@ void WorkerRoutine(BigInteger *current, int size, unsigned int precision, int id
 }
 
 //extract a random number and search a early prime using more threads
-void Prime::PNextPrime(BigInteger *current, unsigned int size, unsigned int precision, int threads)
+void Prime::ParallelNextPrime(BigInteger *current, unsigned int size, unsigned int precision, int threads)
 {
     if(*current < 2)
     {

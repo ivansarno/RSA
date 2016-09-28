@@ -88,7 +88,7 @@ inline bool KeygenRoutine(BigInteger &primeP, BigInteger &primeQ, BigInteger &pu
 inline void DualRoutine(BigInteger &primeP, BigInteger &primeQ, RSA::Utils::Generator *gen, unsigned int size, unsigned int precision, unsigned long distance)
 {
     primeP = gen->getBig(size/2);
-    auto worker = std::thread(TNextPrime, &primeP, size/2, precision);
+    auto worker = std::thread(ThreadsNextPrime, &primeP, size/2, precision);
     primeQ = Prime::NextPrime(gen->getBig(size/2), size/2, precision);
     worker.join();
     
@@ -96,7 +96,7 @@ inline void DualRoutine(BigInteger &primeP, BigInteger &primeQ, RSA::Utils::Gene
     while(!Q_check(primeP, primeQ, distance))
     {
         primeQ = gen->getBig(size/2);
-        Prime::PNextPrime(&primeQ, size/2, precision);
+        Prime::ParallelNextPrime(&primeQ, size/2, precision);
     }
 }
 
@@ -104,16 +104,16 @@ inline void DualRoutine(BigInteger &primeP, BigInteger &primeQ, RSA::Utils::Gene
 inline void ParallelRoutine(BigInteger &primeP, BigInteger &primeQ, RSA::Utils::Generator *gen, unsigned int size, unsigned int precision, unsigned long distance, int threads)
 {
     primeP = gen->getBig(size/2);
-    auto worker = std::thread(PNextPrime, &primeP, size/2, precision, threads/2);
+    auto worker = std::thread(ParallelNextPrime, &primeP, size/2, precision, threads/2);
     primeQ = gen->getBig(size/2);
-    Prime::PNextPrime(&primeQ, size/2, precision, (threads-threads/2));
+    Prime::ParallelNextPrime(&primeQ, size/2, precision, (threads-threads/2));
     worker.join();
     
     
     while(!Q_check(primeP, primeQ, distance))
     {
         primeQ = gen->getBig(size/2);
-        Prime::PNextPrime(&primeQ, size/2, precision, threads);
+        Prime::ParallelNextPrime(&primeQ, size/2, precision, threads);
     }
 }
 
