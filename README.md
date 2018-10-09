@@ -1,7 +1,8 @@
 # RSA
 RSA C++ implementation
 
-**This project will no longer be updated**
+**This project has been realized only for didactic purposes, its use in real systems is not recommended.
+This project will no longer be updated**
 
 The library includes function to:
 
