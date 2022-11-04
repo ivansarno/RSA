@@ -17,7 +17,7 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-//Version V.4.0
+//Version V.4.1
 
 #include "Test.h"
 
@@ -43,7 +43,7 @@ bool RSA::DefaultTest(unsigned int size)
 }
 
 
-bool RSA::CustomTest(unsigned int size, Utils::Generator *generator, int threads, unsigned int precision, unsigned int distance)
+bool RSA::CustomTest(unsigned int size, Utils::Generator *generator, int threads, unsigned int precision)
 {
     if(size < 64 || generator == NULL)
     {
@@ -52,7 +52,7 @@ bool RSA::CustomTest(unsigned int size, Utils::Generator *generator, int threads
     }
     BigInteger pub, priv, modulus;
     
-    ParallelKeygen(pub, priv, modulus, generator, size, threads, precision, distance);
+    ParallelKeygen(pub, priv, modulus, generator, size, threads, precision);
     BigInteger message = generator->getBig(size) % modulus;
     BigInteger crypto = Encrypt(message, pub, modulus);
     BigInteger message1 = Decrypt(crypto, priv, modulus);

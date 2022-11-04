@@ -1,3 +1,9 @@
+Version 4.1
+
+1) Better security checks
+2) Makefile
+3) main for tests
+
 Version 4.0
 
 1) Parallel key creation

@@ -17,12 +17,14 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 */
-//Version V.4.0
+//Version V.4.1
 
 #include "RSA.h"
 
 using namespace RSA;
 using namespace Prime;
+
+#define PRIME_SIZE size/2
 
 BigInteger RSA::Encrypt(const BigInteger &message, const BigInteger &pubkey, const BigInteger &modulus)
 {
@@ -55,13 +57,13 @@ inline bool E_check(const BigInteger &E, const BigInteger &Phi)
 }
 
 //check the compliance with security standard
-inline bool Q_check(BigInteger Q, BigInteger P, unsigned long distance)
+inline bool Q_check(BigInteger Q, BigInteger P, unsigned long size)
 {
     BigInteger dif = abs(P-Q);
     P=(P-1)>>1;
     Q=(Q-1)>>1;
     
-    return (dif > distance) && coprime(P,Q);
+    return (dif > size/2) && coprime(P,Q);
 }
 
 //creates the keys from 2 prime numbers
@@ -85,67 +87,67 @@ inline bool KeygenRoutine(BigInteger &primeP, BigInteger &primeQ, BigInteger &pu
 }
 
 //prime extraction routine for 2 threads
-inline void DualRoutine(BigInteger &primeP, BigInteger &primeQ, RSA::Utils::Generator *gen, unsigned int size, unsigned int precision, unsigned long distance)
+inline void DualRoutine(BigInteger &primeP, BigInteger &primeQ, RSA::Utils::Generator *gen, unsigned int size, unsigned int precision)
 {
-    primeP = gen->getBig(size/2);
-    auto worker = std::thread(ThreadsNextPrime, &primeP, size/2, precision);
-    primeQ = Prime::NextPrime(gen->getBig(size/2), size/2, precision);
+    primeP = gen->getBig(PRIME_SIZE);
+    auto worker = std::thread(ThreadsNextPrime, &primeP, PRIME_SIZE, precision);
+    primeQ = Prime::NextPrime(gen->getBig(PRIME_SIZE), PRIME_SIZE, precision);
     worker.join();
     
     
-    while(!Q_check(primeP, primeQ, distance))
+    while(!Q_check(primeP, primeQ, PRIME_SIZE))
     {
-        primeQ = gen->getBig(size/2);
-        Prime::ParallelNextPrime(&primeQ, size/2, precision);
+        primeQ = gen->getBig(PRIME_SIZE);
+        Prime::ParallelNextPrime(&primeQ, PRIME_SIZE, precision);
     }
 }
 
 //multithread prime extraction routine
-inline void ParallelRoutine(BigInteger &primeP, BigInteger &primeQ, RSA::Utils::Generator *gen, unsigned int size, unsigned int precision, unsigned long distance, int threads)
+inline void ParallelRoutine(BigInteger &primeP, BigInteger &primeQ, RSA::Utils::Generator *gen, unsigned int size, unsigned int precision, int threads)
 {
-    primeP = gen->getBig(size/2);
-    auto worker = std::thread(ParallelNextPrime, &primeP, size/2, precision, threads/2);
-    primeQ = gen->getBig(size/2);
-    Prime::ParallelNextPrime(&primeQ, size/2, precision, (threads-threads/2));
+    primeP = gen->getBig(PRIME_SIZE);
+    auto worker = std::thread(ParallelNextPrime, &primeP, PRIME_SIZE, precision, threads/2);
+    primeQ = gen->getBig(PRIME_SIZE);
+    Prime::ParallelNextPrime(&primeQ, PRIME_SIZE, precision, (threads-threads/2));
     worker.join();
     
     
-    while(!Q_check(primeP, primeQ, distance))
+    while(!Q_check(primeP, primeQ, PRIME_SIZE))
     {
-        primeQ = gen->getBig(size/2);
-        Prime::ParallelNextPrime(&primeQ, size/2, precision, threads);
+        primeQ = gen->getBig(PRIME_SIZE);
+        Prime::ParallelNextPrime(&primeQ, PRIME_SIZE, precision, threads);
     }
 }
 
-bool RSA::Keygen(BigInteger &pubkey, BigInteger &privkey, BigInteger &modulus, RSA::Utils::Generator *gen, unsigned int size, unsigned int precision, unsigned long distance)
+bool RSA::Keygen(BigInteger &pubkey, BigInteger &privkey, BigInteger &modulus, RSA::Utils::Generator *gen, unsigned int size, unsigned int precision)
 {
     if(size < 64 || precision < 2)
         return false;
     
-    BigInteger primeP = Prime::NextPrime(gen->getBig(size/2), size/2, precision);
-    BigInteger primeQ = Prime::NextPrime(gen->getBig(size/2), size/2, precision);
+    BigInteger primeP = Prime::NextPrime(gen->getBig(PRIME_SIZE), PRIME_SIZE, precision);
+    BigInteger primeQ = Prime::NextPrime(gen->getBig(PRIME_SIZE), PRIME_SIZE, precision);
     
     
-    while(!Q_check(primeP, primeQ, distance))
+    while(!Q_check(primeP, primeQ, PRIME_SIZE))
     {
-        primeQ = Prime::NextPrime(gen->getBig(size/2), size/2, precision);
+        primeQ = Prime::NextPrime(gen->getBig(PRIME_SIZE), PRIME_SIZE, precision);
     }
     
     return KeygenRoutine(primeP, primeQ, pubkey, privkey, modulus, gen, size);
 }
 
-bool RSA::ParallelKeygen(BigInteger &pubkey, BigInteger &privkey, BigInteger &modulus, RSA::Utils::Generator *gen, unsigned int size, int threads, unsigned int precision, unsigned long distance)
+bool RSA::ParallelKeygen(BigInteger &pubkey, BigInteger &privkey, BigInteger &modulus, RSA::Utils::Generator *gen, unsigned int size, int threads, unsigned int precision)
 {
     if(threads < 2)
-        return Keygen(pubkey, privkey, modulus, gen, size, precision, distance);
+        return Keygen(pubkey, privkey, modulus, gen, size, precision);
     if(size < 64 || precision < 2)
         return false;
     
     BigInteger primeP, primeQ;
     
     if(threads < 4)
-        DualRoutine(primeP, primeQ, gen, size, precision, distance);
-    else ParallelRoutine(primeP, primeQ, gen, size, precision, distance, threads);
+        DualRoutine(primeP, primeQ, gen, size, precision);
+    else ParallelRoutine(primeP, primeQ, gen, size, precision, threads);
     
     
     return KeygenRoutine(primeP, primeQ, pubkey, privkey, modulus, gen, size);

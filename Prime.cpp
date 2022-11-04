@@ -17,7 +17,7 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-//Version V.4.0
+//Version V.4.1
 
 #include "Prime.h"
 
@@ -64,7 +64,7 @@ bool MRtest(const BigInteger &N, unsigned int size, unsigned int precision, Test
     MRscomposition(N,w,z);
     
     bool ris =true;//default result
-    int i=0;
+    unsigned i=0;
     
     
     BigInteger y;
@@ -138,7 +138,7 @@ bool WorkersMRtest(const BigInteger &N, unsigned int size, unsigned int precisio
     MRscomposition(N,w,z);
     
     bool ris =true;//default result
-    int i=0;
+    unsigned i=0;
     
     
     BigInteger y;
