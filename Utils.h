@@ -34,6 +34,7 @@ namespace RSA
         BigInteger inverse(const BigInteger &number, const BigInteger &modulus, unsigned int size);
         bool coprime (BigInteger a, BigInteger b);
         BigInteger byte2biginteger(uint8_t *byte, unsigned int size);
+        unsigned bitSize(const BigInteger &number);
         
         
         class Generator

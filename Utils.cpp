@@ -163,3 +163,8 @@ BigInteger Utils::byte2biginteger(uint8_t *byte, unsigned int size)
     mpz_clear(z);
     return r;
 }
+
+unsigned Utils::bitSize(const BigInteger &number)
+{
+    return static_cast<unsigned int>(mpz_sizeinbase(number.get_mpz_t(), 2));
+}

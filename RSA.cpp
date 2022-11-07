@@ -63,7 +63,7 @@ inline bool Q_check(BigInteger Q, BigInteger P, unsigned long size)
     P=(P-1)>>1;
     Q=(Q-1)>>1;
     
-    return (dif > size/2) && coprime(P,Q);
+    return (bitSize(dif) > size/2) && coprime(P,Q);
 }
 
 //creates the keys from 2 prime numbers
